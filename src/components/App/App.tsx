@@ -1,15 +1,18 @@
-import css from "./App.module.css";
-import toast, { Toaster } from "react-hot-toast";
+import SearchBar from "../SearchBar/SearchBar";
+import "../../services/movieService";
+import "./App.module.css";
+import getMovies from "../../services/movieService";
 
-const notify = () => toast("Please enter your search query.");
+export default function App() {
+  const handleSearch = async (userSearch: string) => {
+    const response = await getMovies(userSearch);
 
-function App() {
+    console.log(userSearch);
+    console.log(response);
+  };
   return (
-    <div>
-      <button onClick={notify}>touch for message.</button>
-      <Toaster />
-    </div>
+    <>
+      <SearchBar onSubmit={handleSearch} />
+    </>
   );
 }
-
-export default App;
