@@ -9,17 +9,17 @@ interface MovieSearchResponse {
 }
 const link:string = 'https://vercel-api-proxy-six-fawn.vercel.app/api/proxy';
 
-export default async function getMovies(searchText: string) {
-   
-  const response = await axios.get<MovieSearchResponse>(link, {
-    params: {
-      source: 'tmdb',
-      query: searchText,
-      include_adult: false,
-      language: 'en-US',
-      page: 1
-    },
-  });
+export default async function getMovies(searchText: string, page: number = 1) {
+ 
+    const response = await axios.get<MovieSearchResponse>(link, {
+      params: {
+        source: 'tmdb',
+        query: searchText,
+        include_adult: false,
+        language: 'en-US',
+        page: page,
+      },
+    });
+    return response.data.results;
 
-  return response.data;
 }

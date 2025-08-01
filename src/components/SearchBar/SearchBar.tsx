@@ -1,7 +1,7 @@
 import styles from "./SearchBar.module.css";
 
 import toast, { Toaster } from "react-hot-toast";
-const notify = () => toast("Please enter your search query.");
+const notify = () => toast.error("Please enter your search query.");
 
 interface SearchFormProps {
   onSubmit: (userQuery: string) => void;

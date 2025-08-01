@@ -1,18 +1,56 @@
+import { useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
-import "../../services/movieService";
-import "./App.module.css";
 import getMovies from "../../services/movieService";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import toast, { Toaster } from "react-hot-toast";
+import MovieGrid from "../MovieGrid/MovieGrid";
+import MovieModal from "../MovieModal/MovieModal";
+import type { Movie } from "../../types/movie";
+import css from "./App.module.css";
+
+const notify = () => toast.error("No movies found for your request.");
 
 export default function App() {
-  const handleSearch = async (userSearch: string) => {
-    const response = await getMovies(userSearch);
+  const [loader, setLoader] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-    console.log(userSearch);
-    console.log(response);
+  const handleSearch = async (userSearch: string) => {
+    setError(null);
+    setLoader(true);
+    try {
+      const response = await getMovies(userSearch);
+      if (response.length === 0) {
+        notify();
+      } else {
+        setMovies(response);
+      }
+    } catch (err) {
+      setError(err as Error);
+      console.error(err);
+    } finally {
+      setLoader(false);
+    }
   };
+
   return (
-    <>
+    <div className={css.app}>
       <SearchBar onSubmit={handleSearch} />
-    </>
+      <MovieGrid
+        movies={movies}
+        onSelect={(movie) => setSelectedMovie(movie)}
+      />
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
+      {loader && <Loader />}
+      {error && <ErrorMessage />}
+      <Toaster />
+    </div>
   );
 }
