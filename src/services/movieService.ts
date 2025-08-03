@@ -10,7 +10,7 @@ interface MovieSearchResponse {
 const link: string = "https://api.themoviedb.org/3/search/movie";
 const TMDB_KEY:string = import.meta.env.VITE_API_KEY;
 
-export default async function getMovies(searchText: string, page: number = 1) {
+export default async function getMovies(searchText: string, page: number = 1): Promise<Movie[]> {
  
     const response = await axios.get<MovieSearchResponse>(link, {
       params: {
