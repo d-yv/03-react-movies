@@ -20,14 +20,17 @@ export default function App() {
   const handleSearch = async (userSearch: string) => {
     setError(null);
     setLoader(true);
+    setMovies([]);
     try {
       const response = await getMovies(userSearch);
       if (response.length === 0) {
+        setMovies([]);
         notify();
       } else {
         setMovies(response);
       }
     } catch (err) {
+      setMovies([]);
       setError(err as Error);
       console.error(err);
     } finally {
